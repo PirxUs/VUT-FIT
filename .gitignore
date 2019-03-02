@@ -1,4 +1,6 @@
 primes
+primes-i
+steg-decode
 *.o
 CMakeLists.txt
 
