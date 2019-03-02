@@ -6,6 +6,7 @@
 
 #include "error.h"
 
+
 typedef unsigned long *bit_array_t;
 
 #define UL_BITS (sizeof(unsigned long)*CHAR_BIT)
