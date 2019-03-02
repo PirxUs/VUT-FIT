@@ -3,6 +3,7 @@
 
 #include <limits.h>
 #include <assert.h>
+
 #include "error.h"
 
 typedef unsigned long *bit_array_t;
@@ -19,7 +20,7 @@ typedef unsigned long *bit_array_t;
     = {velikost}; static_assert(velikost < 640000, "you suck\n");
 
 #define bit_array_alloc(jmeno_pole,velikost) \
-    assert(velikost < 640000 && velikost > 0); bit_array_t jmeno_pole \
+    assert(velikost < 125000000 && velikost > 0); bit_array_t jmeno_pole \
     = calloc(convert_size_long(velikost), sizeof(unsigned long)); \
     jmeno_pole != NULL ? jmeno_pole[0] = velikost \
     : (error_exit("bit_array_alloc: Chyba alokace paměti"), 0)
@@ -46,7 +47,7 @@ typedef unsigned long *bit_array_t;
         (1UL << index % UL_BITS)) ? 1UL : 0UL
 #else
 
-	inline void bit_array_free(bit_array_t jmeno_pole) {
+    inline void bit_array_free(bit_array_t jmeno_pole) {
         free(jmeno_pole);
     }
 

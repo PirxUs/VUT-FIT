@@ -12,21 +12,29 @@ extern inline void bit_array_setbit(bit_array_t jmeno_pole, unsigned long index,
 extern inline unsigned long bit_array_getbit(bit_array_t jmeno_pole, unsigned long index);
 #endif
 
+extern void Eratosthenes(bit_array_t pole);
+
+#define LIMIT 123000000L
+
 int main() {
-    static bit_array_create(hello, 6000);
-    
-    //bit_array_alloc(hello, 1);
+    bit_array_alloc(primes, LIMIT);
+    Eratosthenes(primes);
 
-    bit_array_setbit(hello, 0, 1);
-    bit_array_setbit(hello, 1, 1);
+    unsigned long lastTen[10];
+    unsigned long prime;
 
-    unsigned long size = bit_array_size(hello);
-    for (unsigned long i = 0; i < size; i++) {
-        printf("%ld: %ld\n", i, bit_array_getbit(hello, i));
+    for (unsigned long j = 0, i = LIMIT - 1; j < 10; i--) {
+        prime = bit_array_getbit(primes, i);
+        if (prime == 0) {
+            lastTen[j] = i;
+            j++;
+        }
     }
-    for (int i = 0; i < 2; i++)
-        printf("%ld\n", hello[i]);
-    //bit_array_free(hello);
-    
+
+    for (int i = 9; i >= 0; i--) {
+        printf("%ld\n", lastTen[i]);
+    }
+
+    bit_array_free(primes);
     return 0;
 }
