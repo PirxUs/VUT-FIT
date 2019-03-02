@@ -1,0 +1,6 @@
+primes
+*.o
+CMakeLists.txt
+
+.idea/
+cmake-build-debug/
