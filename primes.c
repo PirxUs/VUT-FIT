@@ -16,7 +16,7 @@ extern void Eratosthenes(bit_array_t pole);
 
 #define LIMIT 123000000L
 
-int main() {
+int main(void) {
     bit_array_alloc(primes, LIMIT);
     Eratosthenes(primes);
 
@@ -32,7 +32,7 @@ int main() {
     }
 
     for (int i = 9; i >= 0; i--) {
-        printf("%ld\n", lastTen[i]);
+        printf("%lu\n", lastTen[i]);
     }
 
     bit_array_free(primes);

@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #include "ppm.h"
+#include "error.h"
 #include "bit_array.h"
 
 #ifdef USE_INLINE
