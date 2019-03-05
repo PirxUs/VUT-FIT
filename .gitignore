@@ -3,6 +3,7 @@ primes-i
 steg-decode
 *.o
 CMakeLists.txt
+*.ppm
 
 .idea/
 cmake-build-debug/

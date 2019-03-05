@@ -17,7 +17,6 @@ extern inline unsigned long bit_array_getbit(bit_array_t jmeno_pole, unsigned lo
 extern void Eratosthenes(bit_array_t pole);
 
 
-
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         error_exit("Program bere nazev dekodovaneho obrazku jakozto jediny argument");

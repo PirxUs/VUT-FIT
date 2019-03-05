@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
 
 #include "bit_array.h"
@@ -11,7 +9,8 @@ void Eratosthenes(bit_array_t pole) {
     unsigned long limit = bit_array_size(pole);
 
     if (limit < 2)
-        warning_msg("Prvocisla jsou cisla vetsi nez 1");
+        warning_msg("Na intervalu <0, 1> neexistuji zadna prvocisla,\
+                prvni prvocislo je cislo 2");
     
     if (limit > 0)
         bit_array_setbit(pole, 0, 1);

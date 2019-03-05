@@ -5,6 +5,7 @@
 #include "bit_array.h"
 #include "error.h"
 
+//externi deklarace inline funkci
 #ifdef USE_INLINE
 extern inline void bit_array_free(bit_array_t jmeno_pole);
 extern inline unsigned long bit_array_size(bit_array_t jmeno_pole);
@@ -12,12 +13,14 @@ extern inline void bit_array_setbit(bit_array_t jmeno_pole, unsigned long index,
 extern inline unsigned long bit_array_getbit(bit_array_t jmeno_pole, unsigned long index);
 #endif
 
+//externi deklarace funkce z modulu eratosthenes.c
 extern void Eratosthenes(bit_array_t pole);
 
 #define LIMIT 123000000L
 
 int main(void) {
     bit_array_alloc(primes, LIMIT);
+    //bit_array_create(primes, LIMIT);
     Eratosthenes(primes);
 
     unsigned long lastTen[10];

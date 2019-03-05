@@ -11,6 +11,7 @@ run: primes primes-i
 	time ./primes
 	time ./primes-i
 
+#basic target builds
 primes: primes.o error.o eratosthenes.o bit_array.h
 	gcc $(CFLAGS) primes.o error.o eratosthenes.o -o primes
 
@@ -43,5 +44,6 @@ eratosthenes-i.o: eratosthenes.c
 steg-decode-i.o: steg-decode.c
 	gcc $(CFLAGS) $(INLINE) -c -o steg-decode-i.o steg-decode.c
 
+#other targets
 clean:
 	rm -f primes primes-i steg-decode *.o

@@ -1,6 +1,8 @@
 #ifndef BIT_ARRAY_HEADER
 #define BIT_ARRAY_HEADER
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <limits.h>
 #include <assert.h>
 
@@ -18,7 +20,7 @@ typedef unsigned long *bit_array_t;
 
 #define bit_array_create(jmeno_pole,velikost) \
     unsigned long jmeno_pole[convert_size_long(velikost)] \
-    = {velikost}; static_assert(velikost < 640000, "you suck\n");
+    = {velikost}; static_assert(velikost < 125000000, "Prekrocena maximalni velikost\n");
 
 #define bit_array_alloc(jmeno_pole,velikost) \
     assert(velikost > 2); bit_array_t jmeno_pole \

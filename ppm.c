@@ -5,6 +5,8 @@
 #include "ppm.h"
 #include "error.h"
 
+#define SIZE_LIMIT 3*8000*8000
+
 struct ppm *ppm_read(const char *filename) {
     FILE *file = fopen(filename, "rb");
 
@@ -16,7 +18,10 @@ struct ppm *ppm_read(const char *filename) {
     unsigned xsize, ysize, colorValue;
     char fileID[10] = {0};
 
-    fscanf(file, "%s %u %u %u", fileID, &xsize, &ysize, &colorValue);
+    /* tento formatovaci retezec je navrzen tak, aby presne odpovidal
+     * specifikaci hlavicky obrazku ve formatu ppm. Pokud budeme v obrazku
+     * cist dale, zaciname cist binarni data */
+    fscanf(file, "%s %u %u %u ", fileID, &xsize, &ysize, &colorValue);
 
     if (strcmp(fileID, "P6")) {
         warning_msg("Nepodporovany format obrazku: %s", fileID);
@@ -32,6 +37,13 @@ struct ppm *ppm_read(const char *filename) {
 
     struct ppm *p;
     unsigned long bufferLength = 3 * xsize * ysize;
+
+    if (bufferLength > SIZE_LIMIT) {
+        warning_msg("Obrazek je prilis velky");
+        fclose(file);
+        return NULL;
+    }
+
     p = malloc(sizeof(struct ppm) + bufferLength);
     
     if (p == NULL) {
@@ -49,9 +61,6 @@ struct ppm *ppm_read(const char *filename) {
         free(p);
         return NULL;
     }
-
-    //posun v bufferu na zacatek dalsiho radku
-    fgets(p->data, 10, file);
 
     fread(p->data, 1, bufferLength, file);
 
