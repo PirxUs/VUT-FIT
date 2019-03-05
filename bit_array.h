@@ -21,7 +21,7 @@ typedef unsigned long *bit_array_t;
     = {velikost}; static_assert(velikost < 640000, "you suck\n");
 
 #define bit_array_alloc(jmeno_pole,velikost) \
-    assert(velikost > 2 && velikost > 0); bit_array_t jmeno_pole \
+    assert(velikost > 2); bit_array_t jmeno_pole \
     = calloc(convert_size_long(velikost), sizeof(unsigned long)); \
     jmeno_pole != NULL ? jmeno_pole[0] = velikost \
     : (error_exit("bit_array_alloc: Chyba alokace paměti"), 0)
@@ -41,11 +41,11 @@ typedef unsigned long *bit_array_t;
         &= ~(1UL << (index % UL_BITS)))
 
     #define bit_array_getbit(jmeno_pole,index) \
-        (index >= bit_array_size(jmeno_pole)) \
+        (index >= bit_array_size(jmeno_pole) \
         ? (error_exit("bit_array_getbit: Index %lu mimo rozsah 0..%lu", \
         (unsigned long)index, (unsigned long)bit_array_size(jmeno_pole)), 0) : \
         (jmeno_pole[index/UL_BITS + 1] & \
-        (1UL << index % UL_BITS)) ? 1UL : 0UL
+        (1UL << index % UL_BITS)) ? 1UL : 0UL)
 #else
 
     inline void bit_array_free(bit_array_t jmeno_pole) {

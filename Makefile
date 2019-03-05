@@ -1,7 +1,11 @@
 CFLAGS= -std=c11 -O2 -Wall -Wextra -pedantic -g -lm
 INLINE= -DUSE_INLINE
 
-all: primes primes-i steg-decode
+all: primes inline decode
+
+inline: primes-i
+
+decode: steg-decode
 
 run: primes primes-i
 	time ./primes
@@ -17,27 +21,26 @@ steg-decode: steg-decode-i.o error.o eratosthenes-i.o ppm.o bit_array.h
 	gcc $(CFLAGS) steg-decode-i.o error.o eratosthenes-i.o ppm.o -o steg-decode
 
 #object files
-
-primes.o:
+primes.o: primes.c
 	gcc $(CFLAGS) -c -o primes.o primes.c
 
-error.o:
+error.o: error.c error.h
 	gcc $(CFLAGS) -c -o error.o error.c 
 
-eratosthenes.o:
+eratosthenes.o: eratosthenes.c
 	gcc $(CFLAGS) -c -o eratosthenes.o eratosthenes.c
 
-ppm.o:
+ppm.o: ppm.c ppm.h
 	gcc $(CFLAGS) -c -o ppm.o ppm.c
 
 #inline object files
-primes-i.o:
+primes-i.o: primes.c
 	gcc $(CFLAGS) $(INLINE) -c -o primes-i.o primes.c
 
-eratosthenes-i.o:
+eratosthenes-i.o: eratosthenes.c
 	gcc $(CFLAGS) $(INLINE) -c -o eratosthenes-i.o eratosthenes.c
 
-steg-decode-i.o:
+steg-decode-i.o: steg-decode.c
 	gcc $(CFLAGS) $(INLINE) -c -o steg-decode-i.o steg-decode.c
 
 clean:

@@ -12,12 +12,16 @@ void Eratosthenes(bit_array_t pole) {
 
     if (limit < 2)
         warning_msg("Prvocisla jsou cisla vetsi nez 1");
-
-    bit_array_setbit(pole, 0, 1);
-    bit_array_setbit(pole, 1, 1);
+    
+    if (limit > 0)
+        bit_array_setbit(pole, 0, 1);
+    if (limit > 1)
+        bit_array_setbit(pole, 1, 1);
 
     for (unsigned long i = 2; i <= sqrt(limit); i++) {
-        if (bit_array_getbit(pole, i) == 0) {
+
+        if (!bit_array_getbit(pole, i)) {
+
             for (unsigned long j = 2 * i; j < limit; j += i) {
                 bit_array_setbit(pole, j, 1);
             }
