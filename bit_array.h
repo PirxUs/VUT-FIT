@@ -20,10 +20,10 @@ typedef unsigned long *bit_array_t;
 
 #define bit_array_create(jmeno_pole,velikost) \
     unsigned long jmeno_pole[convert_size_long(velikost)] \
-    = {velikost}; static_assert(velikost < 125000000, "Prekrocena maximalni velikost\n");
+    = {velikost}; static_assert(velikost > 0, "Velikost pole musi byt vetsi nez nula\n");
 
 #define bit_array_alloc(jmeno_pole,velikost) \
-    assert(velikost > 2); bit_array_t jmeno_pole \
+    assert(velikost > 0); bit_array_t jmeno_pole \
     = calloc(convert_size_long(velikost), sizeof(unsigned long)); \
     jmeno_pole != NULL ? jmeno_pole[0] = velikost \
     : (error_exit("bit_array_alloc: Chyba alokace paměti"), 0)

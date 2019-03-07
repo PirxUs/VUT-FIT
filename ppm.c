@@ -25,14 +25,12 @@ struct ppm *ppm_read(const char *filename) {
 
     if (strcmp(fileID, "P6")) {
         warning_msg("Nepodporovany format obrazku: %s", fileID);
-        fclose(file);
-        return NULL;
+        goto error;
     }
 
     if (colorValue != 255) {
         warning_msg("Nepodporovany format barev obrazku");
-        fclose(file);
-        return NULL;
+        goto error;
     }
 
     struct ppm *p;
@@ -40,32 +38,35 @@ struct ppm *ppm_read(const char *filename) {
 
     if (bufferLength > SIZE_LIMIT) {
         warning_msg("Obrazek je prilis velky");
-        fclose(file);
-        return NULL;
+        goto error;
     }
 
     p = malloc(sizeof(struct ppm) + bufferLength);
     
     if (p == NULL) {
         warning_msg("Nepodarilo se alokovat pamet pro ppm strukturu");
-        fclose(file);
-        return NULL;
+        goto error;
     }
 
     p->xsize = xsize;
     p->ysize = ysize;
 
-    if (p->data == NULL) {
-        warning_msg("Nepodarilo se alokovat pamet pro RGB buffer obrazku");
-        fclose(file);
-        free(p);
-        return NULL;
-    }
-
     fread(p->data, 1, bufferLength, file);
+
+    if (ferror(file)) {
+        warning_msg("Chyba pri nacitani dat obrazku");
+        goto error_free;
+    }
 
     fclose(file);
     return p;
+
+    //navesti pro osetreni chybovych stavu
+error_free:
+    ppm_free(p);
+error:
+    fclose(file);
+    return NULL;
 }
 
 void ppm_free(struct ppm *p) {

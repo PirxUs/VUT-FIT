@@ -5,23 +5,23 @@
 #include "error.h"
 
 void warning_msg(const char *fmt, ...) {
-    va_list ap;
+    va_list list;
 
-    va_start(ap, fmt);
+    va_start(list, fmt);
     fprintf(stderr, "CHYBA: ");
-    vfprintf(stderr, fmt, ap);
+    vfprintf(stderr, fmt, list);
     fprintf(stderr, "\n");
-    va_end(ap);
+    va_end(list);
 }
 
 void error_exit(const char *fmt, ...) {
-    va_list ap;
+    va_list list;
 
-    va_start(ap, fmt);
+    va_start(list, fmt);
     fprintf(stderr, "CHYBA: ");
-    vfprintf(stderr, fmt, ap);
+    vfprintf(stderr, fmt, list);
     fprintf(stderr, "\n");
-    va_end(ap);
+    va_end(list);
 
     exit(1);
 }
