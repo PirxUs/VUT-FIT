@@ -26,9 +26,9 @@ typedef unsigned long *bit_array_t;
 //prevadi velikost zadanou v pocut bitu na potrebnou velikost pro
 //alokaci v unsigned long
 #define convert_size_long(velikost) \
-    velikost % UL_BITS ? \
+    (velikost % UL_BITS ? \
     velikost / UL_BITS + 2 : \
-    velikost / UL_BITS + 1
+    velikost / UL_BITS + 1)
 
 #define bit_array_create(jmeno_pole,velikost) \
     unsigned long jmeno_pole[convert_size_long(velikost)] \
@@ -54,7 +54,7 @@ typedef unsigned long *bit_array_t;
        ? (vyraz ? (jmeno_pole[index/UL_BITS + 1] |= 1UL << index % UL_BITS) : \
        (jmeno_pole[index/UL_BITS + 1] &= ~(1UL << index % UL_BITS))) : \
        (error_exit("bit_array_setbit: Index %lu mimo rozsah 0..%lu", \
-       (unsigned long)index, (unsigned long)jmeno_pole[0] -1), 0)
+       (unsigned long)index, (unsigned long)jmeno_pole[0] - 1), 0)
 
     #define bit_array_getbit(jmeno_pole,index) \
         (index < jmeno_pole[0] \
