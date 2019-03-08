@@ -17,6 +17,7 @@ void Eratosthenes(bit_array_t pole) {
     if (pole == NULL) error_exit("Neplatny ukazatel na bitove pole");
 
     unsigned long limit = bit_array_size(pole);
+    unsigned long lowLimit = sqrt(limit);
 
     if (limit <= 2)
         warning_msg("Na intervalu <0, 1> neexistuji zadna prvocisla, prvni prvocislo je cislo 2");
@@ -27,7 +28,7 @@ void Eratosthenes(bit_array_t pole) {
     if (limit > 1)
         bit_array_setbit(pole, 1, 1);
 
-    for (unsigned long i = 2; i <= sqrt(limit); i++) {
+    for (unsigned long i = 2; i <= lowLimit; i++) {
         if (!bit_array_getbit(pole, i)) {
             
             for (unsigned long j = i << 1; j < limit; j += i) {

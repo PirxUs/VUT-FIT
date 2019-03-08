@@ -21,14 +21,14 @@
 typedef unsigned long *bit_array_t;
 
 //makro pro vypocet poctu bitu v jednom unsigned long integeru
-#define UL_BITS (sizeof(unsigned long)*CHAR_BIT)
+#define UL_BITS (CHAR_BIT * sizeof(unsigned long))
 
 //prevadi velikost zadanou v pocut bitu na potrebnou velikost pro
 //alokaci v unsigned long
 #define convert_size_long(velikost) \
-    (velikost % UL_BITS) \
-    ? (velikost / UL_BITS + 2) \
-    : (velikost / UL_BITS + 1)
+    velikost % UL_BITS ? \
+    velikost / UL_BITS + 2 : \
+    velikost / UL_BITS + 1
 
 #define bit_array_create(jmeno_pole,velikost) \
     unsigned long jmeno_pole[convert_size_long(velikost)] \
@@ -50,19 +50,18 @@ typedef unsigned long *bit_array_t;
     #define bit_array_size(jmeno_pole) jmeno_pole[0]
 
     #define bit_array_setbit(jmeno_pole,index,vyraz) \
-        (index >= bit_array_size(jmeno_pole)) \
-        ? (error_exit("bit_array_setbit: Index %lu mimo rozsah 0..%lu", \
-        (unsigned long)index, (unsigned long)bit_array_size(jmeno_pole)), 0) : \
-        vyraz ? (jmeno_pole[index/UL_BITS + 1] \
-        |= 1UL << (index % UL_BITS)) : (jmeno_pole[index/UL_BITS + 1] \
-        &= ~(1UL << (index % UL_BITS)))
+       index < jmeno_pole[0] \
+       ? (vyraz ? (jmeno_pole[index/UL_BITS + 1] |= 1UL << index % UL_BITS) : \
+       (jmeno_pole[index/UL_BITS + 1] &= ~(1UL << index % UL_BITS))) : \
+       (error_exit("bit_array_setbit: Index %lu mimo rozsah 0..%lu", \
+       (unsigned long)index, (unsigned long)jmeno_pole[0] -1), 0)
 
     #define bit_array_getbit(jmeno_pole,index) \
-        (index >= bit_array_size(jmeno_pole) \
-        ? (error_exit("bit_array_getbit: Index %lu mimo rozsah 0..%lu", \
-        (unsigned long)index, (unsigned long)bit_array_size(jmeno_pole)), 0) : \
-        (jmeno_pole[index/UL_BITS + 1] & \
-        (1UL << index % UL_BITS)) ? 1UL : 0UL)
+        (index < jmeno_pole[0] \
+        ? jmeno_pole[index/UL_BITS + 1] & \
+        1UL << index % UL_BITS ? 1UL : 0UL \
+        : (error_exit("bit_array_getbit: Index %lu mimo rozsah 0..%lu", \
+        (unsigned long)index, (unsigned long)jmeno_pole[0] - 1), 0))
 #else
 
     //definice inline funkci pro manipulaci s bitovym polem
@@ -76,19 +75,19 @@ typedef unsigned long *bit_array_t;
     }
 
     inline void bit_array_setbit(bit_array_t jmeno_pole, unsigned long index, unsigned long vyraz) {
-        index >= jmeno_pole[0]
-        ? error_exit("bit_array_setbit: Index %lu mimo rozsah 0..%lu",
-        (unsigned long)index, (unsigned long)jmeno_pole[0]), 0 :
-        vyraz ? jmeno_pole[index/UL_BITS + 1] |= 1UL << (index % UL_BITS) : 
-        (jmeno_pole[index/UL_BITS + 1] &= ~(1UL << (index % UL_BITS)));
+       index < jmeno_pole[0]
+       ? (vyraz ? (jmeno_pole[index/UL_BITS + 1] |= 1UL << index % UL_BITS) : 
+       (jmeno_pole[index/UL_BITS + 1] &= ~(1UL << index % UL_BITS))) :
+       (error_exit("bit_array_setbit: Index %lu mimo rozsah 0..%lu",
+       (unsigned long)index, (unsigned long)jmeno_pole[0] - 1), 0);
     }
 
     inline unsigned long bit_array_getbit(bit_array_t jmeno_pole, unsigned long index) {
-        return index >= jmeno_pole[0]
-        ? error_exit("bit_array_getbit: Index %lu mimo rozsah 0..%lu",
-        (unsigned long)index, (unsigned long)jmeno_pole[0]), 0 :
-        jmeno_pole[index/UL_BITS + 1] &
-        (1UL << index % UL_BITS) ? 1UL : 0UL;
+        return index < jmeno_pole[0]
+        ? jmeno_pole[index/UL_BITS + 1] &
+        1UL << index % UL_BITS ? 1UL : 0UL
+        : (error_exit("bit_array_getbit: Index %lu mimo rozsah 0..%lu",
+        (unsigned long)index, (unsigned long)jmeno_pole[0] - 1), 0);
     }
 
 #endif
