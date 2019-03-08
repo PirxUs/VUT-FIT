@@ -30,7 +30,7 @@ void Eratosthenes(bit_array_t pole) {
     for (unsigned long i = 2; i <= sqrt(limit); i++) {
         if (!bit_array_getbit(pole, i)) {
             
-            for (unsigned long j = 2 * i; j < limit; j += i) {
+            for (unsigned long j = i << 1; j < limit; j += i) {
                 bit_array_setbit(pole, j, 1);
             }
         }

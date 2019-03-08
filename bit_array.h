@@ -75,22 +75,20 @@ typedef unsigned long *bit_array_t;
         return jmeno_pole[0];
     }
 
-    inline void bit_array_setbit(bit_array_t jmeno_pole,
-        unsigned long index, unsigned long vyraz) {
-        (index >= bit_array_size(jmeno_pole)) \
-        ? (error_exit("bit_array_setbit: Index %lu mimo rozsah 0..%lu", \
-        (unsigned long)index, (unsigned long)bit_array_size(jmeno_pole)), 0) : \
-        vyraz ? (jmeno_pole[index/UL_BITS + 1] \
-        |= 1UL << (index % UL_BITS)) : (jmeno_pole[index/UL_BITS + 1] \
-        &= ~(1UL << (index % UL_BITS)));
+    inline void bit_array_setbit(bit_array_t jmeno_pole, unsigned long index, unsigned long vyraz) {
+        index >= jmeno_pole[0]
+        ? error_exit("bit_array_setbit: Index %lu mimo rozsah 0..%lu",
+        (unsigned long)index, (unsigned long)jmeno_pole[0]), 0 :
+        vyraz ? jmeno_pole[index/UL_BITS + 1] |= 1UL << (index % UL_BITS) : 
+        (jmeno_pole[index/UL_BITS + 1] &= ~(1UL << (index % UL_BITS)));
     }
 
     inline unsigned long bit_array_getbit(bit_array_t jmeno_pole, unsigned long index) {
-        return (index >= bit_array_size(jmeno_pole)) \
-        ? (error_exit("bit_array_getbit: Index %lu mimo rozsah 0..%lu", \
-        (unsigned long)index, (unsigned long)bit_array_size(jmeno_pole)), 0) : \
-        (jmeno_pole[index/UL_BITS + 1] & \
-        (1UL << index % UL_BITS)) ? 1UL : 0UL;
+        return index >= jmeno_pole[0]
+        ? error_exit("bit_array_getbit: Index %lu mimo rozsah 0..%lu",
+        (unsigned long)index, (unsigned long)jmeno_pole[0]), 0 :
+        jmeno_pole[index/UL_BITS + 1] &
+        (1UL << index % UL_BITS) ? 1UL : 0UL;
     }
 
 #endif

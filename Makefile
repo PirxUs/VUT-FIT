@@ -7,7 +7,7 @@
 #  NOTE: Reseni: IJC-DU1
 #-------------------------------------------------
 
-CFLAGS= -std=c11 -O2 -Wall -Wextra -pedantic -g -lm
+CFLAGS= -std=c11 -O0 -Wall -Wextra -pedantic -g -lm
 INLINE= -DUSE_INLINE
 
 # hlavni cile pro preklad a spusteni
