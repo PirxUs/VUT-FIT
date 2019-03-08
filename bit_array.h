@@ -1,3 +1,12 @@
+/**
+ *	@file	bit_array.h
+ *	@author	Simon Sedlacek, FIT
+ *	@date	10.3.2019
+ *	@brief  Rozhrani modulu bit_array.c. Obsahuje definice maker a inline funkci pro manipulaci se strukturou bitoveho pole.
+ *	@note	Reseni: IJC-DU1, priklad a)
+ *	Prelozeno: gcc 8.3.1 - Fedora release 29 (Twenty Nine) x86_64 
+ */
+
 #ifndef BIT_ARRAY_HEADER
 #define BIT_ARRAY_HEADER
 
@@ -11,8 +20,11 @@
 
 typedef unsigned long *bit_array_t;
 
+//makro pro vypocet poctu bitu v jednom unsigned long integeru
 #define UL_BITS (sizeof(unsigned long)*CHAR_BIT)
 
+//prevadi velikost zadanou v pocut bitu na potrebnou velikost pro
+//alokaci v unsigned long
 #define convert_size_long(velikost) \
     (velikost % UL_BITS) \
     ? (velikost / UL_BITS + 2) \
@@ -28,7 +40,10 @@ typedef unsigned long *bit_array_t;
     jmeno_pole != NULL ? jmeno_pole[0] = velikost \
     : (error_exit("bit_array_alloc: Chyba alokace paměti"), 0)
 
+
+
 #ifndef USE_INLINE
+    //definice maker pro manipulaci s bitovym polem
 
     #define bit_array_free(jmeno_pole) free(jmeno_pole)
 
@@ -50,6 +65,8 @@ typedef unsigned long *bit_array_t;
         (1UL << index % UL_BITS)) ? 1UL : 0UL)
 #else
 
+    //definice inline funkci pro manipulaci s bitovym polem
+
     inline void bit_array_free(bit_array_t jmeno_pole) {
         free(jmeno_pole);
     }
@@ -61,7 +78,7 @@ typedef unsigned long *bit_array_t;
     inline void bit_array_setbit(bit_array_t jmeno_pole,
         unsigned long index, unsigned long vyraz) {
         (index >= bit_array_size(jmeno_pole)) \
-        ? (error_exit("bit_array_getbit: Index %lu mimo rozsah 0..%lu", \
+        ? (error_exit("bit_array_setbit: Index %lu mimo rozsah 0..%lu", \
         (unsigned long)index, (unsigned long)bit_array_size(jmeno_pole)), 0) : \
         vyraz ? (jmeno_pole[index/UL_BITS + 1] \
         |= 1UL << (index % UL_BITS)) : (jmeno_pole[index/UL_BITS + 1] \

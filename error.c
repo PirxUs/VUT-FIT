@@ -1,3 +1,12 @@
+/**
+ *	@file	error.c
+ *	@author	Simon Sedlacek, FIT
+ *	@date	10.3.2019
+ *	@brief  Modul implementujici funkce pro pripad vyskytu chybovych stavu.
+ *	@note	Reseni: IJC-DU1, priklad b)
+ *	Prelozeno: gcc 8.3.1 - Fedora release 29 (Twenty Nine) x86_64 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>

@@ -1,17 +1,29 @@
+#-------------------------------------------------
+#  FILE:   Makefile
+#  AUTHOR: Simon Sedlacek, FIT
+#  EMAIL:  xsedla1h@stud.fit.vutbr.cz
+#  DATE:   10.3.2019
+#  BRIEF:  Makefile pro preklad prvniho domaciho ukolu z predmetu IJC.
+#  NOTE: Reseni: IJC-DU1
+#-------------------------------------------------
+
 CFLAGS= -std=c11 -O2 -Wall -Wextra -pedantic -g -lm
 INLINE= -DUSE_INLINE
 
+# hlavni cile pro preklad a spusteni
 all: primes inline decode
-
-inline: primes-i
-
-decode: steg-decode
 
 run: primes primes-i
 	time ./primes
 	time ./primes-i
 
-#basic target builds
+# vedlejsi redundantni cile pro vetsi prehlednost
+inline: primes-i
+
+decode: steg-decode
+
+
+# zakladni cile prekladu
 primes: primes.o error.o eratosthenes.o bit_array.o
 	gcc $(CFLAGS) primes.o bit_array.o error.o eratosthenes.o -o primes
 
@@ -21,7 +33,7 @@ primes-i: primes-i.o error.o eratosthenes-i.o bit_array-i.o
 steg-decode: steg-decode-i.o error.o eratosthenes-i.o ppm.o bit_array-i.o
 	gcc $(CFLAGS) steg-decode-i.o bit_array-i.o error.o eratosthenes-i.o ppm.o -o steg-decode
 
-#object files
+# objektove soubory
 primes.o: primes.c
 	gcc $(CFLAGS) -c -o primes.o primes.c
 
@@ -37,7 +49,7 @@ eratosthenes.o: eratosthenes.c eratosthenes.h
 ppm.o: ppm.c ppm.h
 	gcc $(CFLAGS) -c -o ppm.o ppm.c
 
-#inline object files
+# objektove soubory s inline funkcemi
 primes-i.o: primes.c
 	gcc $(CFLAGS) $(INLINE) -c -o primes-i.o primes.c
 
@@ -50,7 +62,6 @@ steg-decode-i.o: steg-decode.c
 bit_array-i.o: bit_array.c bit_array.h
 	gcc $(CFLAGS) $(INLINE) -c -o bit_array-i.o bit_array.c
 
-
-#other targets
+# dalsi cile
 clean:
 	rm -f primes primes-i steg-decode *.o

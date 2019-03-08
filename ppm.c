@@ -1,3 +1,12 @@
+/**
+ *	@file	ppm.c
+ *	@author	Simon Sedlacek, FIT
+ *	@date	10.3.2019
+ *	@brief  Modul implementujici funkce pro nacitani binarnich dat z obrazku formatu ppm.
+ *	@note	Reseni: IJC-DU1, priklad b)
+ *	Prelozeno: gcc 8.3.1 - Fedora release 29 (Twenty Nine) x86_64 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +18,7 @@
 
 struct ppm *ppm_read(const char *filename) {
     FILE *file = fopen(filename, "rb");
+    struct ppm *image;
 
     if (file == NULL) {
         warning_msg("Nepodarilo se otevrit obrazek '%s'", filename);
@@ -21,10 +31,16 @@ struct ppm *ppm_read(const char *filename) {
     /* tento formatovaci retezec je navrzen tak, aby presne odpovidal
      * specifikaci hlavicky obrazku ve formatu ppm. Pokud budeme v obrazku
      * cist dale, zaciname cist binarni data */
-    fscanf(file, "%s %u %u %u ", fileID, &xsize, &ysize, &colorValue);
+    fscanf(file, "%9s %u %u %u ", fileID, &xsize, &ysize, &colorValue);
+    unsigned long bufferLength = 3 * xsize * ysize;
 
     if (strcmp(fileID, "P6")) {
         warning_msg("Nepodporovany format obrazku: %s", fileID);
+        goto error;
+    }
+
+    if (bufferLength > SIZE_LIMIT) {
+        warning_msg("Obrazek je prilis velky");
         goto error;
     }
 
@@ -33,25 +49,17 @@ struct ppm *ppm_read(const char *filename) {
         goto error;
     }
 
-    struct ppm *p;
-    unsigned long bufferLength = 3 * xsize * ysize;
-
-    if (bufferLength > SIZE_LIMIT) {
-        warning_msg("Obrazek je prilis velky");
-        goto error;
-    }
-
-    p = malloc(sizeof(struct ppm) + bufferLength);
+    image = malloc(sizeof(struct ppm) + bufferLength);
     
-    if (p == NULL) {
+    if (image == NULL) {
         warning_msg("Nepodarilo se alokovat pamet pro ppm strukturu");
         goto error;
     }
 
-    p->xsize = xsize;
-    p->ysize = ysize;
+    image->xsize = xsize;
+    image->ysize = ysize;
 
-    fread(p->data, 1, bufferLength, file);
+    fread(image->data, 1, bufferLength, file);
 
     if (ferror(file)) {
         warning_msg("Chyba pri nacitani dat obrazku");
@@ -59,11 +67,11 @@ struct ppm *ppm_read(const char *filename) {
     }
 
     fclose(file);
-    return p;
+    return image;
 
     //navesti pro osetreni chybovych stavu
 error_free:
-    ppm_free(p);
+    ppm_free(image);
 error:
     fclose(file);
     return NULL;
