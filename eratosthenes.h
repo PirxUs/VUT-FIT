@@ -10,6 +10,19 @@
 #ifndef ERATOSTHENES_HEADER
 #define ERATOSTHENES_HEADER
 
+/** 
+ * @defgroup Eratosthenes Eratosthenes
+ */
+
+/**
+ * @brief Implementace algoritmu Eratosthenova sita nad bitovym polem.
+ *
+ * @param pole Pointer na bitove pole, do ktereho budeme zapisovat prvocisla.
+ *
+ * @return void
+ *
+ * @ingroup Eratosthenes
+ */
 void Eratosthenes(bit_array_t pole);
 
 #endif

@@ -10,8 +10,30 @@
 #ifndef ERROR_HEADER
 #define ERROR_HEADER
 
+/** 
+ * @defgroup Error Error
+ */
+
+/**
+ * @brief Vypise varovani na stderr.
+ *
+ * @param fmt Retezec tvorici zaklad zpravy.
+ *
+ * @return void
+ *
+ * @ingroup Error
+ */
 void warning_msg(const char *fmt, ...);
 
+/**
+ * @brief Vypise chybovou zpravu a ukonci program s navratovym kodem 1.
+ *
+ * @param fmt Retezec tvorici zaklad chybove zpravy.
+ *
+ * @return void
+ *
+ * @ingroup Error 
+ */
 void error_exit(const char *fmt, ...);
 
 #endif

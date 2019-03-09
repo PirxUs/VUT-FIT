@@ -46,13 +46,13 @@ int main(int argc, char *argv[]) {
     for (unsigned long i = 19, j = 0; i < bufferLength; i++) {
         if (!bit_array_getbit(primes, i)) {
 	    
-	    //lsb nejprve ukladame do znaku c, ktery pak ulozime do pole
+	    /* LSb nejprve ukladame do znaku c, ktery pak ulozime do pole message */
             c |= (p->data[i] & 1) << byteCycle;
             byteCycle++;
 
             if (byteCycle == 8) {
 
-                /* Znaky nejprve ukladame do pole pro pripad chyby
+                /* Znaky nejprve ukladame do pole message pro pripad chyby
                  * v zakonceni zpravy nulovym bytem. */
                 message[j++] = c;
                 if (c == '\0') {
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
         }
     }
     
-    //kontrola zakonceni zpravy nulovym bytem
+    /* Kontrola zakonceni zpravy nulovym bytem */
     if (nullByte == false) {
         ppm_free(p);
         bit_array_free(primes);

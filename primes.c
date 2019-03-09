@@ -15,19 +15,21 @@
 #include "bit_array.h"
 #include "eratosthenes.h"
 
-//velikost bitoveho pole
-#define LIMIT 123000000LU
+/* Velikost bitoveho pole */
+#define SIZE 123000000LU
 
 int main(void) {
-    bit_array_alloc(primes, LIMIT);
-    //bit_array_create(primes, LIMIT);
+    bit_array_alloc(primes, SIZE);
+    //bit_array_create(primes, SIZE);
     
     Eratosthenes(primes);
 
-    //pole pro ulozeni poslednich deseti prvocisel
+    /* Pole pro ulozeni poslednich deseti prvocisel */
     unsigned long lastTen[10] = {0};
 
-    for (unsigned long j = 0, i = LIMIT - 1; j < 10; i--) {
+    /* Postupne ukladame az 10 nejvyssich prvocisel z bitoveho
+     * pole do pole lastTen */
+    for (unsigned long j = 0, i = SIZE - 1; j < 10; i--) {
         if (!bit_array_getbit(primes, i)) {
             lastTen[j] = i;
             j++;
@@ -37,7 +39,7 @@ int main(void) {
             break;
     }
 
-    //tisk poslednich deseti prvocisel
+    /* Tisk poslednich deseti prvocisel */
     for (int i = 9; i >= 0; i--) {
     	if (lastTen[i] == 0)
             continue;

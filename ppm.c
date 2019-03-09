@@ -14,7 +14,8 @@
 #include "ppm.h"
 #include "error.h"
 
-#define SIZE_LIMIT 3*8000*8000
+/* Implementacni limit velikosti dat nacitaneho obrazku. */
+#define SIZE_LIMIT (3*8000*8000)
 
 struct ppm *ppm_read(const char *filename) {
     FILE *file = fopen(filename, "rb");
@@ -28,12 +29,13 @@ struct ppm *ppm_read(const char *filename) {
     unsigned xsize, ysize, colorValue;
     char fileID[10] = {0};
 
-    /* tento formatovaci retezec je navrzen tak, aby presne odpovidal
+    /* Tento formatovaci retezec je navrzen tak, aby presne odpovidal
      * specifikaci hlavicky obrazku ve formatu ppm. Pokud budeme v obrazku
      * cist dale, zaciname cist binarni data */
     fscanf(file, "%9s %u %u %u ", fileID, &xsize, &ysize, &colorValue);
     unsigned long bufferLength = 3 * xsize * ysize;
 
+    /* Ruzne chybove stavy...  */
     if (strcmp(fileID, "P6")) {
         warning_msg("Nepodporovany format obrazku: %s", fileID);
         goto error;
@@ -49,6 +51,7 @@ struct ppm *ppm_read(const char *filename) {
         goto error;
     }
 
+    /* Alokace pameti pro nacteni dat obrazku */
     image = malloc(sizeof(struct ppm) + bufferLength);
     
     if (image == NULL) {
@@ -69,7 +72,7 @@ struct ppm *ppm_read(const char *filename) {
     fclose(file);
     return image;
 
-    //navesti pro osetreni chybovych stavu
+    /* Navesti pro osetreni chybovych stavu */
 error_free:
     ppm_free(image);
 error:

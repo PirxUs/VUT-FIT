@@ -4,6 +4,9 @@ steg-decode
 *.o
 CMakeLists.txt
 *.ppm
+Doxyfile
+html/
+du1-obrazek.ppm
 
 .idea/
 cmake-build-debug/
