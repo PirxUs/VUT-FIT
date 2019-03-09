@@ -28,12 +28,14 @@ void Eratosthenes(bit_array_t pole) {
     if (limit > 1)
         bit_array_setbit(pole, 1, 1);
 
-    for (unsigned long i = 2; i <= lowLimit; i++) {
+    //vyskrtame suda cisla
+    for (unsigned long h = 4; h < limit; h += 2)
+            bit_array_setbit(pole, h, 1);
+
+    for (unsigned long i = 3; i <= lowLimit; i += 2) {
         if (!bit_array_getbit(pole, i)) {
-            
-            for (unsigned long j = i << 1; j < limit; j += i) {
+            for (unsigned long j = i * i ; j < limit; j += i << 1)
                 bit_array_setbit(pole, j, 1);
-            }
         }
     }
 }
