@@ -49,7 +49,7 @@ typedef unsigned long *bit_array_t;
  */
 #define bit_array_create(jmeno_pole,velikost) \
     unsigned long jmeno_pole[convert_size_long(velikost)] \
-    = {velikost}; static_assert(velikost > 0, "Velikost pole musi byt vetsi nez nula\n");
+    = {velikost}; static_assert((velikost) > 0, "Velikost pole musi byt vetsi nez nula\n");
 
 /**
  * Vytvori dynamicky alokovane pole bitu, pamet
@@ -57,9 +57,9 @@ typedef unsigned long *bit_array_t;
  * delku pole v bitech.
  */
 #define bit_array_alloc(jmeno_pole,velikost) \
-    assert(velikost > 0); bit_array_t jmeno_pole \
+    assert((velikost) > 0); bit_array_t jmeno_pole \
     = calloc(convert_size_long(velikost), sizeof(unsigned long)); \
-    jmeno_pole != NULL ? jmeno_pole[0] = velikost \
+    jmeno_pole != NULL ? jmeno_pole[0] = (velikost) \
     : (error_exit("bit_array_alloc: Chyba alokace paměti"), 0)
 
 
@@ -89,22 +89,22 @@ typedef unsigned long *bit_array_t;
      * na hodnotu jedna. V opacnem pripade nastavi dany bit na hodnotu nula.
      */
     #define bit_array_setbit(jmeno_pole,index,vyraz) \
-       index < jmeno_pole[0] \
-       ? vyraz ? (jmeno_pole[index/UL_BITS + 1] |= 1UL << index % UL_BITS) : \
-       (jmeno_pole[index/UL_BITS + 1] &= ~(1UL << index % UL_BITS)) : \
+       (index) < jmeno_pole[0] \
+       ? (vyraz) ? (jmeno_pole[(index)/UL_BITS + 1] |= 1UL << (index) % UL_BITS) : \
+       (jmeno_pole[(index)/UL_BITS + 1] &= ~(1UL << (index) % UL_BITS)) : \
        (error_exit("bit_array_setbit: Index %lu mimo rozsah 0..%lu", \
-       (unsigned long)index, (unsigned long)jmeno_pole[0] - 1), 0)
+       (unsigned long)(index), (unsigned long)jmeno_pole[0] - 1), 0)
 
     /** 
      * Nalezne korektni index v bitovem poli a pomoci bitovych logickych
      * operaci a posuvu zjisti hodnotu hledaneho bitu.
      */
     #define bit_array_getbit(jmeno_pole,index) \
-        (index < jmeno_pole[0] \
-        ? jmeno_pole[index/UL_BITS + 1] & \
-        1UL << index % UL_BITS ? 1UL : 0UL \
+        ((index) < jmeno_pole[0] \
+        ? jmeno_pole[(index)/UL_BITS + 1] & \
+        1UL << (index) % UL_BITS ? 1UL : 0UL \
         : (error_exit("bit_array_getbit: Index %lu mimo rozsah 0..%lu", \
-        (unsigned long)index, (unsigned long)jmeno_pole[0] - 1), 0))
+        (unsigned long)(index), (unsigned long)jmeno_pole[0] - 1), 0))
 
 /** 
  * @}
@@ -151,11 +151,15 @@ typedef unsigned long *bit_array_t;
      * @return void
      */
     inline void bit_array_setbit(bit_array_t jmeno_pole, unsigned long index, unsigned long vyraz) {
-       index < jmeno_pole[0]
-       ? vyraz ? (jmeno_pole[index/UL_BITS + 1] |= 1UL << index % UL_BITS) : 
-       (jmeno_pole[index/UL_BITS + 1] &= ~(1UL << index % UL_BITS)) :
-       (error_exit("bit_array_setbit: Index %lu mimo rozsah 0..%lu",
-       (unsigned long)index, (unsigned long)jmeno_pole[0] - 1), 0);
+       if (index < jmeno_pole[0]) {
+           if (vyraz)
+               jmeno_pole[index/UL_BITS + 1] |= 1UL << index % UL_BITS;
+           else
+                jmeno_pole[index/UL_BITS + 1] &= ~(1UL << index % UL_BITS);
+       } else {
+           error_exit("bit_array_setbit: Index %lu mimo rozsah 0..%lu",
+                   (unsigned long)index, (unsigned long)jmeno_pole[0] - 1);
+       }
     }
 
     /** 
@@ -168,11 +172,11 @@ typedef unsigned long *bit_array_t;
      * @return Vraci hodnotu bitu na danem indexu.
      */
     inline unsigned long bit_array_getbit(bit_array_t jmeno_pole, unsigned long index) {
-        return index < jmeno_pole[0]
-        ? jmeno_pole[index/UL_BITS + 1] &
-        1UL << index % UL_BITS ? 1UL : 0UL
-        : (error_exit("bit_array_getbit: Index %lu mimo rozsah 0..%lu",
-        (unsigned long)index, (unsigned long)jmeno_pole[0] - 1), 0);
+        if (index < jmeno_pole[0])
+            return jmeno_pole[index/UL_BITS + 1] & 1UL << index % UL_BITS ? 1UL : 0UL;
+        else
+            return error_exit("bit_array_getbit: Index %lu mimo rozsah 0..%lu",
+                    (unsigned long)index, (unsigned long)jmeno_pole[0] - 1), 0;
     }
 
 /**
