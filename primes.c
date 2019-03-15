@@ -19,8 +19,7 @@
 #define SIZE 123000000LU
 
 int main(void) {
-    bit_array_alloc(primes, SIZE);
-    //bit_array_create(primes, SIZE);
+    bit_array_create(primes, SIZE);
     
     Eratosthenes(primes);
 
@@ -47,6 +46,5 @@ int main(void) {
         printf("%lu\n", lastTen[i]);
     }
 
-    bit_array_free(primes);
     return 0;
 }
